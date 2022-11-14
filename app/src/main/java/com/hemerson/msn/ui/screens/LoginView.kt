@@ -130,7 +130,7 @@ fun LoginView() {
             )
 
             MsnButtonRound(
-                modifier = Modifier.padding(top = 14.dp),
+                modifier = Modifier.padding(top = 32.dp),
                 text = R.string.login,
                 verticalPaddingValues = 16.dp,
             ) {

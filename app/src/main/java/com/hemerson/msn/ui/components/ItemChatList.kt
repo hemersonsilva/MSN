@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -40,27 +43,25 @@ import androidx.compose.ui.unit.sp
 import com.hemerson.msn.R
 import com.hemerson.msn.ui.theme.Attention
 import com.hemerson.msn.ui.theme.Black
+import com.hemerson.msn.ui.theme.Blue
 import com.hemerson.msn.ui.theme.DarkBlue
+import com.hemerson.msn.ui.theme.LightBlue
+import com.hemerson.msn.ui.theme.SimpleWhite
 import com.hemerson.msn.ui.theme.VeryLightBlue
 
 @Composable
-fun MsnToolbar(
+fun ItemChatList(
     isChatScreen: Boolean = false,
+    hasNewMessage: Boolean = false,
     userStatusColor: Color
 ) {
     val profileStartPadding = if (isChatScreen) 24.dp else 8.dp
 
     Card(
-        elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomStart = 16.dp,
-            bottomEnd = 16.dp
-        )
+        backgroundColor = if (hasNewMessage) LightBlue else SimpleWhite
     ) {
         Row(
             modifier = Modifier
@@ -75,16 +76,16 @@ fun MsnToolbar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            
-            if (isChatScreen){
-                IconButton(onClick = {  }) {
+
+            if (isChatScreen) {
+                IconButton(onClick = { }) {
                     Box(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(VeryLightBlue),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.KeyboardArrowLeft,
                             contentDescription = null,
@@ -102,10 +103,10 @@ fun MsnToolbar(
                     painter = painterResource(id = R.drawable.profile_placeholder),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(48.dp)
                         .clip(CircleShape)
                 )
-                MsnUserStatus(userStatusColor)
+                MsnUserStatus(userStatusColor, isToolbar = false)
             }
 
             Column(
@@ -116,15 +117,15 @@ fun MsnToolbar(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Emily Burton",
+                    text = "Lia :)",
                     color = Black,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 24.sp,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 22.sp,
                     maxLines = 1
                 )
                 Text(
-                    text = "il ballo della vita .-.",
+                    text = "Chama ai",
                     color = Black.copy(alpha = 0.5f),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
@@ -133,12 +134,33 @@ fun MsnToolbar(
                 )
             }
 
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = if (isChatScreen) Icons.Outlined.MoreVert else Icons.Outlined.Settings,
-                    contentDescription = null,
-                    tint = DarkBlue
+            Box(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .width(31.dp)
+                    .height(24.dp)
+                    .background(Blue, RoundedCornerShape(100)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "8",
+                    color = SimpleWhite,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 20.sp,
+                    maxLines = 1
                 )
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(Attention),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(painter = painterResource(id = R.drawable.ic_attention) , contentDescription = null)
             }
         }
     }
@@ -146,6 +168,6 @@ fun MsnToolbar(
 
 @Preview(showBackground = true)
 @Composable
-fun MsnToolbarPreview() {
-    MsnToolbar(userStatusColor = Attention, isChatScreen = false)
+fun ItemChatListPreview() {
+    ItemChatList(userStatusColor = Attention, isChatScreen = false)
 }

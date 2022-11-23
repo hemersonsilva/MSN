@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hemerson.msn.R
-import com.hemerson.msn.ui.theme.Attention
+import com.hemerson.msn.ui.theme.StatusBusy
 import com.hemerson.msn.ui.theme.Black
 import com.hemerson.msn.ui.theme.Blue
 import com.hemerson.msn.ui.theme.LightBlue
@@ -41,11 +40,10 @@ fun ItemChatList(
     hasNewMessage: Boolean = false,
     userStatusColor: Color
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
-        backgroundColor = if (hasNewMessage) LightBlue else SimpleWhite
+            .wrapContentHeight().background(if (hasNewMessage) LightBlue else SimpleWhite)
     ) {
         Row(
             modifier = Modifier
@@ -53,15 +51,13 @@ fun ItemChatList(
                 .wrapContentHeight()
                 .padding(
                     start = 8.dp,
-                    top = 24.dp,
+                    top = 8.dp,
                     end = 0.dp,
-                    bottom = 24.dp
+                    bottom = 8.dp
                 ),
             verticalAlignment = CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-
-
             Box(
                 Modifier
                     .padding(start = 8.dp)
@@ -124,7 +120,7 @@ fun ItemChatList(
                     .padding(end = 16.dp)
                     .size(24.dp)
                     .clip(CircleShape)
-                    .background(Attention),
+                    .background(StatusBusy),
                 contentAlignment = Alignment.Center,
             ) {
                 Image(painter = painterResource(id = R.drawable.ic_attention) , contentDescription = null)
@@ -136,5 +132,5 @@ fun ItemChatList(
 @Preview(showBackground = true)
 @Composable
 fun ItemChatListPreview() {
-    ItemChatList(userStatusColor = Attention)
+    ItemChatList(userStatusColor = StatusBusy)
 }

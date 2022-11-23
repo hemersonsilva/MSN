@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hemerson.msn.R
-import com.hemerson.msn.ui.theme.Attention
+import com.hemerson.msn.ui.theme.StatusBusy
 import com.hemerson.msn.ui.theme.Black
 import com.hemerson.msn.ui.theme.DarkBlue
 import com.hemerson.msn.ui.theme.VeryLightBlue
@@ -142,5 +142,5 @@ fun MsnToolbar(
 @Preview(showBackground = true)
 @Composable
 fun MsnToolbarPreview() {
-    MsnToolbar(userStatusColor = Attention, isChatScreen = true)
+    MsnToolbar(userStatusColor = StatusBusy, isChatScreen = true)
 }

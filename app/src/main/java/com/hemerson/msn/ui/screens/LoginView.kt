@@ -37,10 +37,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hemerson.msn.R
 import com.hemerson.msn.ui.components.MsnButtonRound
 import com.hemerson.msn.ui.components.MsnTextField
 import com.hemerson.msn.ui.theme.Black
+import com.hemerson.msn.ui.theme.Blue
 import com.hemerson.msn.ui.theme.DarkBlue
 import kotlinx.coroutines.launch
 
@@ -51,6 +53,8 @@ fun LoginView() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(Blue)
 
     Column(
         Modifier

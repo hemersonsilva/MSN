@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "809958984776",
+    "project_id": "msnchat-1646b",
+    "storage_bucket": "msnchat-1646b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809958984776:android:5e82b683d3067030d95c7d",
+        "android_client_info": {
+          "package_name": "com.hemerson.msn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809958984776-v52007tt6ee98thhaq13vlm1qprb1oh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLygBxUx2_krzUAgS-FU4ddAmQcm_t7Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809958984776-v52007tt6ee98thhaq13vlm1qprb1oh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

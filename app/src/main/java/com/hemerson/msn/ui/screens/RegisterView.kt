@@ -1,7 +1,6 @@
 package com.hemerson.msn.ui.screens
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -22,12 +21,7 @@ import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,15 +39,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hemerson.msn.R
+import com.hemerson.msn.register.RegisterViewModel
 import com.hemerson.msn.ui.components.MsnButtonRound
 import com.hemerson.msn.ui.components.MsnTextField
 import com.hemerson.msn.ui.theme.Black
 import com.hemerson.msn.ui.theme.SimpleWhite
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RegisterView() {
+fun RegisterView(viewModel: RegisterViewModel) {
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -61,11 +57,9 @@ fun RegisterView() {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(SimpleWhite)
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? -> imageUri = uri }
+    ) { uri: Uri? -> viewModel.imageUri.value = uri }
 
     Column(
         modifier = Modifier
@@ -73,113 +67,126 @@ fun RegisterView() {
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        UserImage(imageUri, bitmap, context, launcher)
-        UserImagePlaceholder(bitmap, launcher)
 
-        Column {
-            Text(
-                text = "Name",
-                color = Black,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 16.dp),
-                lineHeight = 24.sp
-            )
+        UserImage(viewModel, context, launcher)
+        UserImagePlaceholder(viewModel, launcher)
 
-            MsnTextField(
-                modifier = Modifier.padding(top = 12.dp),
-                value = "",
-                updatedValue = { },
-                placeholderText = "Type your name",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                isEmailOrPassword = true
-            )
+        with(viewModel) {
+            Column {
 
-            Text(
-                text = "E-mail",
-                color = Black,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 16.dp),
-                lineHeight = 24.sp
-            )
+                Text(
+                    text = "Name",
+                    color = Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 16.dp),
+                    lineHeight = 24.sp
+                )
 
-            MsnTextField(
-                modifier = Modifier.padding(top = 12.dp),
-                value = "",
-                updatedValue = {},
-                placeholderText = "Type your email",
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next,
-                isEmailOrPassword = true
-            )
-            Text(
-                text = "Password",
-                color = Black,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp),
-                lineHeight = 24.sp
-            )
-
-            MsnTextField(
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .onFocusEvent {
-                        if (it.isFocused) {
-                            coroutineScope.launch {
-                                bringIntoViewRequester.bringIntoView()
-                            }
-                        }
+                MsnTextField(
+                    modifier = Modifier.padding(top = 12.dp),
+                    value = name.value,
+                    updatedValue = {
+                        name.value = it
                     },
-                value = "",
-                updatedValue = { },
-                placeholderText = "Type your password",
-                keyboardType = KeyboardType.Password,
-                showPassIcon = true,
-                imeAction = ImeAction.Next,
-                isEmailOrPassword = true
-            )
+                    placeholderText = "Type your name",
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    isEmailOrPassword = true
+                )
 
-            Text(
-                text = "Repeat password",
-                color = Black,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp),
-                lineHeight = 24.sp
-            )
+                Text(
+                    text = "E-mail",
+                    color = Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 16.dp),
+                    lineHeight = 24.sp
+                )
 
-            MsnTextField(
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .onFocusEvent {
-                        if (it.isFocused) {
-                            coroutineScope.launch {
-                                bringIntoViewRequester.bringIntoView()
-                            }
-                        }
+                MsnTextField(
+                    modifier = Modifier.padding(top = 12.dp),
+                    value = email.value,
+                    updatedValue = {
+                        email.value = it
                     },
-                value = "",
-                updatedValue = { },
-                placeholderText = "Repeat password",
-                keyboardType = KeyboardType.Password,
-                showPassIcon = true,
-                imeAction = ImeAction.Done,
-                isEmailOrPassword = true
-            )
+                    placeholderText = "Type your email",
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next,
+                    isEmailOrPassword = true
+                )
 
-            MsnButtonRound(
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .bringIntoViewRequester(bringIntoViewRequester),
-                text = R.string.register,
-                verticalPaddingValues = 16.dp,
-            ) {
-                Toast.makeText(context, "Em desenvolvimento...", Toast.LENGTH_SHORT).show()
+                Text(
+                    text = "Password",
+                    color = Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp),
+                    lineHeight = 24.sp
+                )
+
+                MsnTextField(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch {
+                                    bringIntoViewRequester.bringIntoView()
+                                }
+                            }
+                        },
+                    value = password.value,
+                    updatedValue = {
+                        password.value = it
+                    },
+                    placeholderText = "Type your password",
+                    keyboardType = KeyboardType.Password,
+                    showPassIcon = true,
+                    imeAction = ImeAction.Next,
+                    isEmailOrPassword = true
+                )
+
+                Text(
+                    text = "Repeat password",
+                    color = Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp),
+                    lineHeight = 24.sp
+                )
+
+                MsnTextField(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .onFocusEvent {
+                            if (it.isFocused) {
+                                coroutineScope.launch {
+                                    bringIntoViewRequester.bringIntoView()
+                                }
+                            }
+                        },
+                    value = confirmPassword.value,
+                    updatedValue = {
+                        confirmPassword.value = it
+                    },
+                    placeholderText = "Repeat password",
+                    keyboardType = KeyboardType.Password,
+                    showPassIcon = true,
+                    imeAction = ImeAction.Done,
+                    isEmailOrPassword = true
+                )
+
+                MsnButtonRound(
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .bringIntoViewRequester(bringIntoViewRequester),
+                    text = R.string.register,
+                    verticalPaddingValues = 16.dp,
+                ) {
+                    Toast.makeText(context, "Em desenvolvimento...", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -187,10 +194,10 @@ fun RegisterView() {
 
 @Composable
 private fun UserImagePlaceholder(
-    bitmap: MutableState<Bitmap?>,
+    viewModel: RegisterViewModel,
     launcher: ManagedActivityResultLauncher<String, Uri?>
 ) {
-    if (bitmap.value == null) {
+    if (viewModel.bitmap.value == null) {
         Image(
             painter = painterResource(id = R.drawable.profile_placeholder),
             contentDescription = null,
@@ -207,12 +214,12 @@ private fun UserImagePlaceholder(
 
 @Composable
 private fun UserImage(
-    imageUri: Uri?,
-    bitmap: MutableState<Bitmap?>,
+    viewModel: RegisterViewModel,
     context: Context,
     launcher: ManagedActivityResultLauncher<String, Uri?>
-) {
-    imageUri?.let {
+) = with(viewModel){
+
+    imageUri.value?.let {
         if (Build.VERSION.SDK_INT < 28) {
             bitmap.value = MediaStore
                 .Images
@@ -244,5 +251,5 @@ private fun UserImage(
 @Preview(showBackground = true)
 @Composable
 private fun RegisterViewPreview() {
-    RegisterView()
+    RegisterView(getViewModel())
 }

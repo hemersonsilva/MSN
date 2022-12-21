@@ -15,11 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.End
@@ -41,20 +39,41 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hemerson.msn.R
 import com.hemerson.msn.ui.components.MsnButtonRound
 import com.hemerson.msn.ui.components.MsnTextField
+import com.hemerson.msn.ui.state.LoginScreenUiState
 import com.hemerson.msn.ui.theme.Black
 import com.hemerson.msn.ui.theme.Blue
 import com.hemerson.msn.ui.theme.DarkBlue
+import com.hemerson.msn.ui.viewmodels.LoginScreenViewModel
 import kotlinx.coroutines.launch
+
+@Composable
+fun LoginScreen(
+    viewModel: LoginScreenViewModel
+){
+    val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    LoginScreen(
+        state = state,
+        onLoginClick = {
+            Toast.makeText(context, "Em desenvolvimento...", Toast.LENGTH_SHORT).show()
+        }
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LoginView() {
+fun LoginScreen(
+    state: LoginScreenUiState = LoginScreenUiState(),
+    onLoginClick: () -> Unit = {}
+) {
 
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = BringIntoViewRequester()
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(Blue)
+
+    val email = state.email
+    val password = state.password
 
     Column(
         Modifier
@@ -77,8 +96,6 @@ fun LoginView() {
             )
         }
 
-        var inputEmail by remember { mutableStateOf("") }
-
         Column(modifier = Modifier.padding(vertical = 36.dp, horizontal = 24.dp)) {
             Text(
                 text = "Welcome back!",
@@ -98,10 +115,8 @@ fun LoginView() {
 
             MsnTextField(
                 modifier = Modifier.padding(top = 12.dp),
-                value = inputEmail,
-                updatedValue = {
-                    inputEmail = it
-                },
+                value = email,
+                updatedValue = state.onEmailChange,
                 placeholderText = "Type your email",
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
@@ -128,10 +143,8 @@ fun LoginView() {
                             }
                         }
                     },
-                value = inputEmail,
-                updatedValue = {
-                    inputEmail = it
-                },
+                value = password,
+                updatedValue = state.onPasswordChange,
                 placeholderText = "Type your password",
                 keyboardType = KeyboardType.Password,
                 showPassIcon = true,
@@ -156,9 +169,8 @@ fun LoginView() {
                     .bringIntoViewRequester(bringIntoViewRequester),
                 text = R.string.login,
                 verticalPaddingValues = 16.dp,
-            ) {
-                Toast.makeText(context, "Em desenvolvimento...", Toast.LENGTH_SHORT).show()
-            }
+                action = onLoginClick
+            )
 
             Text(
                 modifier = Modifier
@@ -189,6 +201,6 @@ fun LoginView() {
 @Preview(showBackground = true)
 @Composable
 fun LoginViewPreview() {
-    LoginView()
+    LoginScreen()
 }
 

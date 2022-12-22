@@ -3,6 +3,7 @@ package com.hemerson.msn.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,8 +36,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hemerson.msn.R
+import com.hemerson.msn.routes.Routes
 import com.hemerson.msn.ui.components.MsnButtonRound
 import com.hemerson.msn.ui.components.MsnTextField
 import com.hemerson.msn.ui.state.LoginScreenUiState
@@ -48,7 +51,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginScreenViewModel
+    viewModel: LoginScreenViewModel,
+    navController: NavHostController
 ){
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -56,6 +60,9 @@ fun LoginScreen(
         state = state,
         onLoginClick = {
             Toast.makeText(context, "Em desenvolvimento...", Toast.LENGTH_SHORT).show()
+        },
+        onSignUpClick = {
+            navController.navigate(Routes.Register.routeName)
         }
     )
 }
@@ -64,7 +71,8 @@ fun LoginScreen(
 @Composable
 fun LoginScreen(
     state: LoginScreenUiState = LoginScreenUiState(),
-    onLoginClick: () -> Unit = {}
+    onLoginClick: () -> Unit = {},
+    onSignUpClick: () -> Unit = {},
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -175,7 +183,8 @@ fun LoginScreen(
             Text(
                 modifier = Modifier
                     .padding(top = 24.dp)
-                    .align(CenterHorizontally),
+                    .align(CenterHorizontally)
+                    .clickable { onSignUpClick() },
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
